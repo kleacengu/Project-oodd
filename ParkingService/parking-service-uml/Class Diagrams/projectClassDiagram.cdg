@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="ReplyMessage">
+  <ClassDiagramComponents>
+    <Class name="Meter" package="org.klea.test.project.model" visibility="public" xPosition="631.0" yPosition="997.0">
+      <Fields>
+        <Field name="meterId" type="Integer" visibility="private"/>
+        <Field name="location" type="String" visibility="private"/>
+        <Field name="parkingBands" type="List&lt;ParkingBand&gt;" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="calculateCharge" returnType="Date" visibility="public">
+          <Argument type="Date" name="startTime"/>
+          <Argument type="Date" name="endTime"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="ReplyMessage" package="org.klea.test.project.model" visibility="public" xPosition="22.0" yPosition="208.0">
+      <Fields>
+        <Field name="code" type="Integer" visibility="private"/>
+        <Field name="debugMessage" type="String" visibility="private"/>
+        <Field name="meterConfig" type="Meter" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="Ticket" package="org.klea.test.project.model" visibility="public" xPosition="263.0" yPosition="928.0">
+      <Fields>
+        <Field name="ticketId" type="Integer" visibility="private"/>
+        <Field name="dateOfIssue" type="Date" visibility="private"/>
+        <Field name="durationTime" type="double" visibility="private"/>
+        <Field name="endTime" type="String" visibility="private"/>
+        <Field name="meterId" type="Integer" visibility="private"/>
+        <Field name="Location" type="String" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="ParkingBand" package="" visibility="public" xPosition="1098.0" yPosition="1016.0">
+      <Fields>
+        <Field name="startTime" type="String" visibility="private"/>
+        <Field name="pricePerHalfHour" type="double" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Interface name="MeterFacade" package="org.klea.test.project.model" visibility="public" xPosition="498.0" yPosition="460.0">
+      <Methods>
+        <Method name="createTicket" returnType="String" visibility="public">
+          <Argument type="Integer" name="meterId"/>
+          <Argument type="double" name="durationTime"/>
+          <Argument type="String" name="startTime"/>
+        </Method>
+        <Method name="validateCard" returnType="Boolean" visibility="public">
+          <Argument type="String" name="cardNumber"/>
+        </Method>
+      </Methods>
+    </Interface>
+    <Interface name="MeterDAO" package="org.klea.test.project.model" visibility="public" xPosition="574.0" yPosition="761.0">
+      <Methods>
+        <Method name="createParkingMeter" returnType="Integer" visibility="public">
+          <Argument type="Integer" name="meterId"/>
+        </Method>
+        <Method name="updateParkingMeter" returnType="Meter" visibility="public">
+          <Argument type="Meter" name="meter"/>
+        </Method>
+        <Method name="deleteParkingMeter" returnType="Integer" visibility="public">
+          <Argument type="Integer" name="meterId"/>
+        </Method>
+        <Method name="retreiveParkingMeter" returnType="Integer" visibility="public">
+          <Argument type="Integer" name="meterId"/>
+        </Method>
+        <Method name="retreiveAllMeters" returnType="List&lt;ParkingMeter&gt;" visibility="public"/>
+      </Methods>
+    </Interface>
+    <Interface name="RestInterface" package="org.klea.test.project.model" visibility="public" xPosition="246.0" yPosition="19.0">
+      <Methods>
+        <Method name="requestConfiguration" returnType="Integer" visibility="public">
+          <Argument type="Integer" name="meterId"/>
+        </Method>
+      </Methods>
+    </Interface>
+    <Interface name="ServiceFactory" package="org.klea.test.project.model" visibility="public" xPosition="579.0" yPosition="173.0">
+      <Methods>
+        <Method name="getMeterFacade" returnType="MeterFacade" visibility="public"/>
+      </Methods>
+    </Interface>
+    <Interface name="WebUiJsp_do_not_generate" package="org.klea.test.project.model" visibility="public" xPosition="881.0" yPosition="19.0">
+      <Methods/>
+    </Interface>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <UseRelation name="usesEntityDao" source="org.klea.test.project.model.MeterFacade" target="org.klea.test.project.model.MeterDAO" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation name="usesParkingBand" source="org.klea.test.project.model.Meter" target="ParkingBand" sourceCardinality="1..1" targetCardinality="1..*"/>
+    <IsRelation name="is" source="org.klea.test.project.model.MeterFacade" target="org.klea.test.project.model.MeterDAO"/>
+    <UseRelation name="usesMeter" source="org.klea.test.project.model.MeterDAO" target="org.klea.test.project.model.Meter" sourceCardinality="1..1" targetCardinality="1..*"/>
+    <UseRelation name="usesServiceFacade" source="org.klea.test.project.model.WebUiJsp_do_not_generate" target="org.klea.test.project.model.MeterFacade" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation name="usesServiceFacade" source="org.klea.test.project.model.RestInterface" target="org.klea.test.project.model.MeterFacade" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation name="usesObjectFactoryToGetService" source="org.klea.test.project.model.WebUiJsp_do_not_generate" target="org.klea.test.project.model.ServiceFactory" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation name="useReplyMessage" source="org.klea.test.project.model.RestInterface" target="org.klea.test.project.model.ReplyMessage" sourceCardinality="1..1" targetCardinality="0..*"/>
+    <UseRelation name="createsAndAccesses" source="org.klea.test.project.model.ServiceFactory" target="org.klea.test.project.model.MeterFacade" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation name="meterCreatesTicket" source="org.klea.test.project.model.Meter" target="org.klea.test.project.model.Ticket" sourceCardinality="1..1" targetCardinality="0..*"/>
+    <UseRelation name="usesMetetFactoryToGetService" source="org.klea.test.project.model.RestInterface" target="org.klea.test.project.model.ServiceFactory" sourceCardinality="1..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>
