@@ -6,9 +6,9 @@
 package org.klea.test.project.service;
 
 import org.klea.test.project.dao.jaxbimpl.EntityDAOJaxbImpl;
-import org.klea.test.project.model.EntityDAO;
 import org.klea.test.project.model.ServiceFacade;
 import org.klea.test.project.model.ServiceFactory;
+import org.klea.test.project.model.MeterDAO;
 
 /**
  *
@@ -25,9 +25,9 @@ public class ServiceFactoryImpl implements ServiceFactory {
             throw new IllegalArgumentException("dataFileUri must not be null");
         }
         
-        EntityDAO entityDao = new EntityDAOJaxbImpl(dataFileUri);
+        MeterDAO meterDao = new EntityDAOJaxbImpl(dataFileUri);
         ServiceFacadeImpl serviceFacadeImpl = new ServiceFacadeImpl();
-        serviceFacadeImpl.setEntityDAO(entityDao);
+        serviceFacadeImpl.setMeterDAO(meterDao);
         serviceFacade = serviceFacadeImpl;
         
     }

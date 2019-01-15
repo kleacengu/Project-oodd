@@ -8,7 +8,7 @@ package org.klea.test.project.service.test;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.klea.test.project.model.Entity;
+import org.klea.test.project.model.Meter;
 import org.klea.test.project.model.ServiceFacade;
 import org.klea.test.project.model.ServiceFactory;
 import org.klea.test.project.service.ServiceFactoryImpl;
@@ -33,13 +33,13 @@ public class ServiceFacadeImplTest {
         assertNotNull(serviceFacade);
         
         // clear file before anything else
-        serviceFacade.deleteAllEntities();
+        serviceFacade.deleteParkingMeter(Integer.BYTES);
 
-        Entity entity = new Entity();
-        entity.setField_A("testFieldA");
+        Meter meter = new Meter();
+        meter.setMeterId(001);
 
-        serviceFacade.createEntity(entity);
-        List<Entity> retrievedEntities = serviceFacade.retrieveMatchingEntities(entity);
+        serviceFacade.createParkingMeter(meter);
+        List<Meter> retrievedEntities = (List<Meter>) serviceFacade.retreiveParkingMeter(001);
 
         assertEquals(1, retrievedEntities.size());
     }

@@ -16,37 +16,41 @@ public class ReplyMessage {
 
     private String debugMessage;
     
-    private EntityList entityList=new EntityList();
+    private Meter meterConfig;
+    
 
-
-    public Integer getCode() {
-        return code;
+    public void setDebugMessage(String debugMessage) {
+        this.debugMessage = debugMessage;
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
+    public void setMeterConfig(Meter meterConfig) {
+        this.meterConfig = meterConfig;
+    }
+    
+      public Integer getCode() {
+        return code;
     }
 
     public String getDebugMessage() {
         return debugMessage;
     }
 
-    public void setDebugMessage(String debugMessage) {
-        this.debugMessage = debugMessage;
+    public Meter getMeterConfig() {
+        return meterConfig;
     }
 
-    public EntityList getEntityList() {
-        return entityList;
-    }
 
-    public void setEntityList(EntityList entityList) {
-        this.entityList = entityList;
+
+     public void setCode(Integer setCode) {
+        this.code = setCode;
     }
 
     @Override
     public String toString() {
-        return "ReplyMessage{" + "code=" + code + ", debugMessage=" + debugMessage + ", entityList=" + entityList + '}';
+        return "ReplyMessage{" + "code=" + code + ", debugMessage=" + debugMessage + ", meterConfig=" + meterConfig + '}';
     }
+     
+    
 
 
 

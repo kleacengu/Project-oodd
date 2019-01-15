@@ -12,8 +12,8 @@ import static org.junit.Assert.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.klea.test.project.dao.jaxbimpl.EntityDAOJaxbImpl;
-import org.klea.test.project.model.Entity;
-import org.klea.test.project.model.EntityDAO;
+import org.klea.test.project.model.Meter;
+import org.klea.test.project.model.MeterDAO;
 
 /**
  * tests for entityDao.createEntity(entity) entityDao.deleteEntity(Id) entityDao.retrieveAllEntities() entityDao.retrieveEntity(Id)
@@ -36,84 +36,69 @@ public class EntityDAOJaxbImplTest {
         assertFalse(file.exists());
 
         // create dao
-        EntityDAO entityDao = new EntityDAOJaxbImpl(TEST_DATA_FILE_LOCATION);
+        MeterDAO meterDao = new EntityDAOJaxbImpl(TEST_DATA_FILE_LOCATION);
 
         // check that new file created
         assertTrue(file.exists());
 
         // check there are no entities
-        assertTrue(entityDao.retrieveAllEntities().isEmpty());
+        assertTrue(meterDao.retreiveAllMeters().isEmpty());
 
-        // add a 3 entities
-        int ENTITY_NUMBER = 4;
+        // add 2 entities
+        int ENTITY_NUMBER = 3;
         for (int intityId = 0; intityId < ENTITY_NUMBER; intityId++) {
-            Entity entity = new Entity();
-            entity.setField_A("field_A_" + intityId);
-            entity.setField_B("field_B_" + intityId);;
-            entity.setField_C("field_C_" + intityId);;
+            Meter meter = new Meter();
+            meter.setMeterId(intityId);
+            meter.setLocation("Location" + intityId);
+            //entity.setDuration("field_C_" + intityId);;
 
-            LOG.debug("adding entity:" + entity);
-            Entity e = entityDao.createEntity(entity);
+            LOG.debug("adding meter:" + meter);
+            Meter e = meterDao.createParkingMeter(meter);
             assertNotNull(e);
         }
 
         // check 3 entities added
-        assertTrue(ENTITY_NUMBER == entityDao.retrieveAllEntities().size());
+        assertTrue(ENTITY_NUMBER == meterDao.retreiveAllMeters().size());
 
         // check return false for delete unknown entity
-        assertFalse(entityDao.deleteEntity(Integer.SIZE));
+        assertFalse(meterDao.deleteParkingMeter(ENTITY_NUMBER));
 
         // find an entity to delete
-        List<Entity> elist = entityDao.retrieveAllEntities();
-        Integer idToDelete = elist.get(1).getId();
+        List<Meter> elist = meterDao.retreiveAllMeters();
+        Integer idToDelete = elist.get(1).getMeterId();
         LOG.debug("deleting  entity:" + idToDelete);
 
         // check found and deleted
-        assertTrue(entityDao.deleteEntity(idToDelete));
+        assertTrue(meterDao.deleteParkingMeter(idToDelete));
 
         // check no longer found after deletion
-        assertNull(entityDao.retrieveEntity(idToDelete));
+        assertNull(meterDao.retreiveParkingMeter(idToDelete));
 
         // check entities size decremeted
-        List<Entity> elist2 = entityDao.retrieveAllEntities();
+        List<Meter> elist2 = meterDao.retreiveAllMeters();
         assertTrue(ENTITY_NUMBER - 1 == elist2.size());
 
         // update entity
-        Entity entityToUpdate = elist2.get(1);
-        LOG.debug("updating entity: " + entityToUpdate);
+        Meter meterToUpdate = elist2.get(1);
+        LOG.debug("updating entity: " + meterToUpdate);
 
         // add 3 newProperties for entity
-        entityToUpdate.setField_A("field_A_Update");
-        entityToUpdate.setField_B("field_B_Update");
-        entityToUpdate.setField_C(null); // do not update field C
-        LOG.debug("update template: " + entityToUpdate);
+        meterToUpdate.setLocation("Southampton - Portland Terrace");
+        //meterToUpdate.setField_B("field_B_Update");
+        //meterToUpdate.setField_C(null); // do not update field C
+        LOG.debug("update meter: " + meterToUpdate);
 
-        Entity updatedEntity = entityDao.updateEntity(entityToUpdate);
-        LOG.debug("updated entity: " + updatedEntity);
+        Meter updatedEntity = meterDao.updateParkingMeter(meterToUpdate);
+        LOG.debug("updated meter: " + updatedEntity);
         assertNotNull(updatedEntity);
 
         // check entity updated
-        Entity retrievedEntity = entityDao.retrieveEntity(updatedEntity.getId());
-        LOG.debug("retreived entity: " + retrievedEntity);
-        assertEquals(entityToUpdate.getField_A(), retrievedEntity.getField_A());
-        assertEquals(entityToUpdate.getField_A(), retrievedEntity.getField_A());
-        assertNotEquals(entityToUpdate.getField_C(), retrievedEntity.getField_C());
-
-        // test retrieve matching entities
-        List<Entity> entityList = entityDao.retrieveAllEntities();
-        Entity searchfor = entityList.get(2);
-        LOG.debug("searching for: " + searchfor);
-
-        Entity template = new Entity();
-        template.setField_B(searchfor.getField_B());
-        LOG.debug("using template : " + template);
-
-        List<Entity> retrievedList = entityDao.retrieveMatchingEntities(template);
-        assertEquals(1, retrievedList.size());
-
-        LOG.debug("found : " + retrievedList.get(0));
-        assertEquals(searchfor, retrievedList.get(0));
-
+        Meter retrievedMeter = meterDao.retreiveParkingMeter(updatedEntity.getMeterId());
+        LOG.debug("retreived meter: " + retrievedMeter);
+        assertEquals(meterToUpdate.getLocation(), retrievedMeter.getLocation());
+        //assertEquals(entityToUpdate.getDuration(), retrievedMeter.getDuration());
+        //assertNotEquals(entityToUpdate.getField_C(), retrievedEntity.getField_C());
     }
+       
 
 }

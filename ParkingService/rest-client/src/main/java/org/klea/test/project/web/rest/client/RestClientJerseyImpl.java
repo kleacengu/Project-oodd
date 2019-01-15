@@ -5,7 +5,7 @@
  */
 package org.klea.test.project.web.rest.client;
 
-import org.klea.test.project.model.Entity;
+import org.klea.test.project.model.Meter;
 import org.klea.test.project.model.ReplyMessage;
 import org.klea.test.project.model.RestInterface;
 
@@ -39,14 +39,14 @@ public class RestClientJerseyImpl implements RestInterface {
     }
 
     @Override
-    public ReplyMessage retrieveMatchingEntites(Entity entityTempate) {
+    public ReplyMessage retrieveMatchingEntites(Meter meterId) {
 
         Response response = null;
         ReplyMessage replyMessage = null;
         try {
 
             Invocation.Builder builder = target.path("/retrievematching").request(mediaType);
-            response = builder.post(javax.ws.rs.client.Entity.entity(entityTempate, mediaType));
+            response = builder.post(javax.ws.rs.client.Entity.entity(meterId, mediaType));
 
             // read reply message
             replyMessage = response.readEntity(ReplyMessage.class);

@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.klea.test.project.model.Entity;
+import org.klea.test.project.model.Meter;
 import org.klea.test.project.model.ReplyMessage;
 import org.klea.test.project.model.ServiceFacade;
 import org.klea.test.project.web.WebObjectFactory;
@@ -32,63 +32,29 @@ import org.klea.test.project.web.WebObjectFactory;
 public class ExampleProjectRestImpl {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExampleProjectRestImpl.class);
-
-    @POST
-    @Path("/retrievematching")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response retrieveMatchingEntites(Entity entityTemplate) {
-
-        try {
-            if (entityTemplate == null) {
-                throw new IllegalArgumentException("entityTemplate request parameter must be set");
-            }
-            ReplyMessage replyMessage = new ReplyMessage();
-
-            ServiceFacade serviceFacade = WebObjectFactory.getServiceFactory().getServiceFacade();
-            List<Entity> eList = serviceFacade.retrieveMatchingEntities(entityTemplate);
-
-            LOG.debug("/retrievematching entityTemplate: " + entityTemplate 
-                    + " found " + eList.size() + "entities");
-
-            replyMessage.getEntityList().getEntities().addAll(eList);
-
-            replyMessage.setCode(Response.Status.OK.getStatusCode());
-
-            return Response.status(Response.Status.OK).entity(replyMessage).build();
-
-        } catch (Exception ex) {
-            LOG.error("error calling /retrievematching ", ex);
-            ReplyMessage replyMessage = new ReplyMessage();
-            replyMessage.setCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            replyMessage.setDebugMessage("error calling /retrievematching " + ex.getMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(replyMessage).build();
-        }
-    }
-
     // GET localhost:8680/rest/example/retrieve?id=9
     @GET
     @Path("/retrieve")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response retrieve(@QueryParam("id") Integer id) {
+    public Response retrieve(@QueryParam("id") Integer meterId) {
         try {
-            if (id == null) {
+            if (meterId == null) {
                 throw new IllegalArgumentException("id request parameter must be set");
             }
             ReplyMessage replyMessage = new ReplyMessage();
 
             ServiceFacade serviceFacade = WebObjectFactory.getServiceFactory().getServiceFacade();
-            Entity entity = serviceFacade.retrieveEntity(id);
-            if (entity != null) {
-                LOG.debug("/retrieve id=" + id + " found entity :" + entity);
-                replyMessage.getEntityList().getEntities().add(entity);
+            Meter parkingMeter = serviceFacade.retrieveMeterConfig(meterId);
+            if (parkingMeter != null) {
+                LOG.debug("/retrieve id=" + meterId + " found entity :" + parkingMeter);
+                replyMessage.setMeterConfig(parkingMeter);
 
                 replyMessage.setCode(Response.Status.OK.getStatusCode());
                 return Response.status(Response.Status.OK).entity(replyMessage).build();
             } else {
-                LOG.debug("/retrieve id=" + id + " found no entity :");
-                replyMessage.setDebugMessage("/retrieve id=" + id + " found no entity");
+                LOG.debug("/retrieve id=" + meterId + " found no entity :");
+                replyMessage.setDebugMessage("/retrieve id=" + meterId + " found no entity");
                 replyMessage.setCode(Response.Status.OK.getStatusCode());
                 return Response.status(Response.Status.OK).entity(replyMessage).build();
             }

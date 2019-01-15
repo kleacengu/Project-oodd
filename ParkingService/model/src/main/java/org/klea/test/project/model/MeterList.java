@@ -19,20 +19,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class EntityList {
+public class MeterList {
 
     // only used by persistance layer
     private Integer lastEntityId = null;
 
-    @XmlElementWrapper(name = "entities")
-    @XmlElement(name = "entity")
-    private List<Entity> entities = new ArrayList<Entity>();
+    @XmlElementWrapper(name = "meters")
+    @XmlElement(name = "meter")
+    private List<Meter> entities = new ArrayList<Meter>();
 
-    public List<Entity> getEntities() {
+    public List<Meter> getEntities() {
         return entities;
     }
 
-    public void setEntities(List<Entity> entities) {
+    public void setEntities(List<Meter> entities) {
         this.entities = entities;
     }
     

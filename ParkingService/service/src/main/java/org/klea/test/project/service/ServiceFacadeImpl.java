@@ -1,60 +1,78 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.klea.test.project.service;
 
 import java.util.List;
-import org.klea.test.project.model.Entity;
-import org.klea.test.project.model.EntityDAO;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.klea.test.project.model.Meter;
 import org.klea.test.project.model.ServiceFacade;
+import org.klea.test.project.model.MeterDAO;
+import org.klea.test.project.model.Ticket;
 
-/**
- *
- * @author cgallen
- */
 public class ServiceFacadeImpl implements ServiceFacade {
     
-    EntityDAO entityDAO = null;
+    MeterDAO meterDAO = null;
 
-    public void setEntityDAO(EntityDAO entityDAO) {
-        this.entityDAO = entityDAO;
+    public void setMeterDAO(MeterDAO meterDAO) {
+        this.meterDAO = meterDAO;
     }
 
     @Override
-    public void deleteAllEntities() {
-       entityDAO.deleteAllEntities();
+    public boolean deleteParkingMeter(Integer meterId) {
+       return meterDAO.deleteParkingMeter(meterId);
     }
+    
+    @Override
+    public Meter retrieveParkingMeter(Integer meterId){
+      return meterDAO.retreiveParkingMeter(meterId);
+    }
+            
+    @Override
+    public Meter updateParkingMeter(Meter meter) {
+        return meterDAO.updateParkingMeter(meter);
+    }
+    
 
     @Override
-    public Entity createEntity(Entity entity) {
-        return entityDAO.createEntity(entity);
+    public List<Meter> retreiveAllMeters() {
+        return meterDAO.retreiveAllMeters();
     }
+        
+    
+     @Override
+    public boolean validateCard(String cardNumber, String lunnNumber) {
+        if (cardNumber.length() == 16)
+        {
+            if(lunnNumber.length() == 3)
+                return true;
+        }
+        return false;
+    }
+    
+     AtomicInteger m_atomicIssueNumber = new AtomicInteger(0);
 
-    @Override
-    public boolean deleteEntity(Integer id) {
-        return entityDAO.deleteEntity(id);
+    private int getNewTicketNumber() {
+        int issueNumber = m_atomicIssueNumber.incrementAndGet();
+        return issueNumber;
     }
+    
+    
+     @Override
+   public String createTicket(Integer meterId, double durationTime, String startTime, String endTime, Date dateOfIssue) {
+       
+      int ticketId = getNewTicketNumber();
+      Ticket ticket = new Ticket();
+      
+      ticket.setMeterId(meterId);
+      ticket.setDurationTime(durationTime);
+      ticket.setStartTime(startTime);
+      ticket.setEndTime(endTime);
+      ticket.setDateOfIssue(dateOfIssue);
+      
+      String ticketString = ticketId + meterId + durationTime + startTime + endTime + dateOfIssue;
+      return ticketString;
+   }
+       
 
-    @Override
-    public Entity retrieveEntity(Integer id) {
-        return entityDAO.retrieveEntity(id);
-    }
-
-    @Override
-    public List<Entity> retrieveAllEntities() {
-        return entityDAO.retrieveAllEntities();
-    }
-
-    @Override
-    public List<Entity> retrieveMatchingEntities(Entity entityTempate) {
-        return entityDAO.retrieveMatchingEntities(entityTempate);
-    }
-
-    @Override
-    public Entity updateEntity(Entity entity) {
-        return entityDAO.updateEntity(entity);
-    }
     
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.klea.test.project.model.Entity;
+import org.klea.test.project.model.Meter;
 import org.klea.test.project.model.ReplyMessage;
 import org.klea.test.project.web.rest.client.RestClientJerseyImpl;
 
@@ -31,15 +31,15 @@ public class RestClientJerseyImplTest {
         // try to retreive an unknown entity
         ReplyMessage replyMessage = restClient.retrieveEntity(Integer.SIZE);
         assertNotNull(replyMessage);
-        assertTrue(replyMessage.getEntityList().getEntities().isEmpty());
+        assertTrue(replyMessage.getMeterConfig().getLocation().isEmpty());
 
         // try to retreive entity with id 1
         ReplyMessage replyMessage2 = restClient.retrieveEntity(1);
         assertNotNull(replyMessage2);
-        assertEquals(1, replyMessage2.getEntityList().getEntities().size());
+        assertEquals(1, replyMessage2.getMeterConfig().getMeterId().size());
 
-        Entity entity = replyMessage2.getEntityList().getEntities().get(0);
-        System.out.println("Received Entity: " + entity);
+        Meter meter = replyMessage2.getMeterConfig().getMeterId().get(0);
+        System.out.println("Received Meter: " + meter);
 
     }
 
@@ -48,19 +48,19 @@ public class RestClientJerseyImplTest {
 
         RestClientJerseyImpl restClient = new RestClientJerseyImpl(baseUrl, mediaType);
 
-        Entity entityTempate = new Entity();
-        entityTempate.setField_A("abcd");
+        Meter meter = new Meter();
+        meter.setMeterId(001);
 
         // try to retreive an unknown entity
-        ReplyMessage replyMessage = restClient.retrieveMatchingEntites(entityTempate);
+        ReplyMessage replyMessage = restClient.retrieveMatchingEntites(meter);
         assertNotNull(replyMessage);
 
-        List<Entity> entityList =  replyMessage.getEntityList().getEntities();
+        List<Meter> entityList =  replyMessage.getEntityList().getEntities();
         System.out.println("Received "
                 + entityList.size()
                 + " Entities");
         
-       for(Entity e: entityList){
+       for(Meter e: entityList){
            System.out.println("   "+ e);
        }
         

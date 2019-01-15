@@ -17,15 +17,15 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.klea.test.project.model.Entity;
-import org.klea.test.project.model.EntityDAO;
-import org.klea.test.project.model.EntityList;
+import org.klea.test.project.model.Meter;
+import org.klea.test.project.model.MeterList;
+import org.klea.test.project.model.MeterDAO;
 
 /**
  *
  * @author cgallen
  */
-public class EntityDAOJaxbImpl implements EntityDAO {
+public class EntityDAOJaxbImpl implements MeterDAO {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntityDAOJaxbImpl.class);
 
@@ -40,7 +40,7 @@ public class EntityDAOJaxbImpl implements EntityDAO {
 
     private File jaxbFile = null;
 
-    private EntityList entityList = null;
+    private MeterList meterList = null;
 
     private JAXBContext jaxbContext = null;
 
@@ -54,33 +54,33 @@ public class EntityDAOJaxbImpl implements EntityDAO {
     }
 
     @Override
-    public Entity createEntity(Entity entity) {
-        if (entity == null) {
+    public Meter createParkingMeter(Meter meterIn) {
+        if (meterIn == null) {
             throw new IllegalArgumentException("entity cannot be null");
         }
         synchronized (Lock) {
             // set initial id if not set or increment by 1
-            Integer id = (entityList.getLastEntityId()==null) ? 1 : entityList.getLastEntityId() + 1;
+            Integer id = (meterList.getLastEntityId()==null) ? 1 : meterList.getLastEntityId() + 1;
 
-            entityList.setLastEntityId(id);
-            Entity ecopy = copy(entity);
-            ecopy.setId(id);
-            entityList.getEntities().add(ecopy);
+            meterList.setLastEntityId(id);
+            Meter ecopy = copy(meterIn);
+            ecopy.setMeterId(id);
+            meterList.getEntities().add(ecopy);
             save();
             return ecopy;
         }
     }
 
     @Override
-    public boolean deleteEntity(Integer id) {
-        if (id == null) {
+    public boolean deleteParkingMeter(Integer meterId) {
+        if (meterId == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
         synchronized (Lock) {
-            Iterator<Entity> it = entityList.getEntities().iterator();
+            Iterator<Meter> it = meterList.getEntities().iterator();
             while (it.hasNext()) {
-                Entity en = it.next();
-                if (id.equals(en.getId())) {
+                Meter en = it.next();
+                if (meterId.equals(en.getMeterId())) {
                     it.remove();
                     save();
                     return true;
@@ -90,21 +90,21 @@ public class EntityDAOJaxbImpl implements EntityDAO {
         }
     }
 
-    @Override
-    public void deleteAllEntities() {
-        synchronized (Lock) {
-            entityList.getEntities().clear();
-        }
-    }
+   // @Override
+    //public void deleteAllEntities() {
+    //    synchronized (Lock) {
+    //        meterList.getEntities().clear();
+     //   }
+   // }
 
     @Override
-    public Entity retrieveEntity(Integer id) {
-        if (id == null) {
+    public Meter retreiveParkingMeter(Integer meterId) {
+        if (meterId == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
         synchronized (Lock) {
-            for (Entity en : entityList.getEntities()) {
-                if (id.equals(en.getId())) {
+            for (Meter en : meterList.getEntities()) {
+                if (meterId.equals(en.getMeterId())) {
                     return copy(en);
                 }
             }
@@ -113,10 +113,10 @@ public class EntityDAOJaxbImpl implements EntityDAO {
     }
 
     @Override
-    public List<Entity> retrieveAllEntities() {
+    public List<Meter> retreiveAllMeters() {
         synchronized (Lock) {
-            List<Entity> returnList = new ArrayList<Entity>();
-            for (Entity entity : entityList.getEntities()) {
+            List<Meter> returnList = new ArrayList<Meter>();
+            for (Meter entity : meterList.getEntities()) {
                 returnList.add(copy(entity));
             };
             return returnList;
@@ -124,69 +124,72 @@ public class EntityDAOJaxbImpl implements EntityDAO {
     }
 
     /**
-     * Returns a list of all Entities which match all of the set (i.e. not null) fields of entityTemplate
+     * Returns a list of all Meters which match all of the set (i.e. not null) fields of meterId
      *
-     * @param entityTemplate
+     * @param meterId
      * @return
      */
-    @Override
-    public List<Entity> retrieveMatchingEntities(Entity entityTemplate) {
-        if (entityTemplate == null) {
-            throw new IllegalArgumentException("entityTemplate cannot be null");
-        }
-        List<Entity> returnList = new ArrayList<Entity>();
-        for (Entity entity : entityList.getEntities()) {
-            boolean match = true;
-            if (entityTemplate.getId() != null) {
-                if (!entityTemplate.getId().equals(entity.getId())) {
-                    match = false;
-                }
-            };
-            if (entityTemplate.getField_A() != null) {
-                if (!entityTemplate.getField_A().equals(entity.getField_A())) {
-                    match = false;
-                }
-            };
-            if (entityTemplate.getField_B() != null) {
-                if (!entityTemplate.getField_B().equals(entity.getField_B())) {
-                    match = false;
-                }
-            };
-            if (entityTemplate.getField_C() != null) {
-                if (!entityTemplate.getField_C().equals(entity.getField_C())) {
-                    match = false;
-                }
-            };
-            if (match) {
-                returnList.add(copy(entity));
-            }
-        };
-        return returnList;
-    }
+    //@Override
+    //public List<Meter> retrieveMatchingEntities(Meter meterId) {
+    //    if (meterId == null) {
+    //        throw new IllegalArgumentException("entityTemplate cannot be null");
+    //   }
+    //    List<Meter> returnList = new ArrayList<Meter>();
+    //    for (Meter entity : meterList.getEntities()) {
+    //        boolean match = true;
+    //        if (meterId.getMeterId()!= null) {
+    //            if (!meterId.getMeterId().equals(entity.getMeterId())) {
+    //                match = false;
+    //            }
+    //        };
+    //        if (meterId.getLocation() != null) {
+    //            if (!meterId.getLocation().equals(entity.getLocation())) {
+    //                match = false;
+    //            }
+    //        };
+            //if (meterId.getDuration() != null) {
+            //    if (!meterId.getDuration().equals(entity.getDuration())) {
+            //       match = false;
+            //    }
+            //};
+            //if (meterId.getField_C() != null) {
+            //    if (!meterId.getField_C().equals(entity.getField_C())) {
+            //       match = false;
+            //   }
+            //};
+    //        if (match) {
+    //            returnList.add(copy(entity));
+    //        }
+    //    };
+    //    return returnList;
+    //}
 
     @Override
-    public Entity updateEntity(Entity entityTemplate) {
-        if (entityTemplate == null) {
+    public Meter updateParkingMeter(Meter meterId) {
+        if (meterId == null) {
             throw new IllegalArgumentException("entity cannot be null");
         }
         synchronized (Lock) {
-            for (Entity en : entityList.getEntities()) {
-                if (entityTemplate.getId().equals(en.getId())) {
+            for (Meter en : meterList.getEntities()) {
+                if (meterId.getMeterId().equals(en.getMeterId())) {
                     boolean changedfield = false;
 
                     // update properties fields if only if entityTemplate field is set
-                    if (entityTemplate.getField_A() != null) {
-                        en.setField_A(entityTemplate.getField_A());
-                        changedfield = true;
-                    }
-                    if (entityTemplate.getField_B() != null) {
-                        en.setField_B(entityTemplate.getField_B());
-                        changedfield = true;
-                    }
-                    if (entityTemplate.getField_C() != null) {
-                        en.setField_C(entityTemplate.getField_C());
-                        changedfield = true;
-                    }
+                    //if (meterId.getLocation() != null) {
+                    //    en.setLocation(meterId.getLocation());
+                    //    changedfield = true;
+                    //   
+                    //}
+                    //if (meterId.getDuration() != null) {
+                    //    en.setDuration(meterId.getDuration());
+                    //    changedfield = true;
+                    //    
+                    //}
+                    //if (meterId.getField_C() != null) {
+                    //    en.setField_C(meterId.getField_C());
+                    //    changedfield = true;
+                        //get price
+                    //}
                     // save if anything changed
                     if (changedfield) {
                         save();
@@ -200,20 +203,20 @@ public class EntityDAOJaxbImpl implements EntityDAO {
     }
 
     /**
-     * copies new Entity data transfer objects to create detached object and so avoid problems with indirect object modification
+     * copies new Meter data transfer objects to create detached object and so avoid problems with indirect object modification
      *
      * @param entity
-     * @return independent copy of Entity
+     * @return independent copy of Meter
      */
-    private Entity copy(Entity entity) {
+    private Meter copy(Meter meterId) {
         try {
             StringWriter sw1 = new StringWriter();
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.marshal(entity, sw1);
+            jaxbMarshaller.marshal(meterId, sw1);
 
             StringReader sr1 = new StringReader(sw1.toString());
             Unmarshaller jaxbUnMarshaller = jaxbContext.createUnmarshaller();
-            Entity newAccount = (Entity) jaxbUnMarshaller.unmarshal(sr1);
+            Meter newAccount = (Meter) jaxbUnMarshaller.unmarshal(sr1);
             return newAccount;
         } catch (JAXBException ex) {
             throw new RuntimeException("problem copying jaxb object", ex);
@@ -239,12 +242,12 @@ public class EntityDAOJaxbImpl implements EntityDAO {
                 LOG.debug("dataFile exists loading:" + jaxbFile.getAbsolutePath());
                 // load jaxbFile
                 Unmarshaller jaxbUnMarshaller = jaxbContext.createUnmarshaller();
-                entityList = (EntityList) jaxbUnMarshaller.unmarshal(jaxbFile);
+                meterList = (MeterList) jaxbUnMarshaller.unmarshal(jaxbFile);
             } else {
                 // create annd save an empty jaxbFile
                 LOG.debug("dataFile does not exist creating new " + jaxbFile.getAbsolutePath());
 
-                entityList = new EntityList();
+                meterList = new MeterList();
 
                 // make directories if dont exist
                 jaxbFile.getParentFile().mkdirs();
@@ -268,10 +271,10 @@ public class EntityDAOJaxbImpl implements EntityDAO {
 
             // output pretty printed
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.marshal(entityList, jaxbFile);
+            jaxbMarshaller.marshal(meterList, jaxbFile);
             if (LOG.isDebugEnabled()) {
                 StringWriter sw1 = new StringWriter();
-                jaxbMarshaller.marshal(entityList, sw1);
+                jaxbMarshaller.marshal(meterList, sw1);
                 LOG.debug("saving xml to file:" + sw1.toString());
             }
 

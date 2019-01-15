@@ -25,7 +25,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.klea.test.project.model.Entity;
+import org.klea.test.project.model.Meter;
+import org.klea.test.project.model.ParkingBand;
 import org.klea.test.project.model.ReplyMessage;
 
 /**
@@ -57,17 +58,16 @@ public class ModelJaxbTest {
             ReplyMessage replyMessage1 = new ReplyMessage();
             replyMessage1.setCode(200);
             replyMessage1.setDebugMessage("debug message 1");
+            Meter meterConfig = new Meter();
+            meterConfig.setLocation("Southampton");
+            meterConfig.setMeterId(100);
+            ParkingBand parkingBand = new ParkingBand();
+            parkingBand.setStartTime("10:00");
+            parkingBand.setPricePerHalfHour(2.50);
+            meterConfig.getParkingBands().add(parkingBand);
+            replyMessage1.setMeterConfig(meterConfig);
 
-            List<Entity> entities = replyMessage1.getEntityList().getEntities();
-
-            for (int intityId = 0; intityId < 3; intityId++) {
-                Entity entity = new Entity();
-                entity.setId(intityId);
-                entity.setField_A("field_A_" + intityId);
-                entity.setField_B("field_B_" + intityId);;
-                entity.setField_C("field_C_" + intityId);;
-                entities.add(entity);
-            }
+            Meter entities = replyMessage1.getMeterConfig();
 
             // marshal the object lists to system out, a file and a stringWriter
             jaxbMarshaller.marshal(replyMessage1, System.out);
