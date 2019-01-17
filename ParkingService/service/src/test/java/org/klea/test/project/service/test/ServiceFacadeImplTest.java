@@ -34,13 +34,19 @@ public class ServiceFacadeImplTest {
         
         // clear file before anything else
         serviceFacade.deleteParkingMeter(Integer.BYTES);
-
-        Meter meter = new Meter();
-        meter.setMeterId(001);
-
-        serviceFacade.createParkingMeter(meter);
+        Meter meterIn = new Meter();
+        
+        serviceFacade.createParkingMeter(meterIn);
+       
+        meterIn.setMeterId(001);
+        meterIn.setLocation("Portland Terrace");
+        
+        meterIn.setMeterId(002);
+        meterIn.setLocation("West Quay");
+        
         List<Meter> retrievedEntities = (List<Meter>) serviceFacade.retreiveParkingMeter(001);
 
         assertEquals(1, retrievedEntities.size());
+        System.out.println(retrievedEntities);
     }
 }

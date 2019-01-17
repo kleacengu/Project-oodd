@@ -47,14 +47,14 @@ public class ExampleProjectRestImpl {
             ServiceFacade serviceFacade = WebObjectFactory.getServiceFactory().getServiceFacade();
             Meter parkingMeter = serviceFacade.retrieveMeterConfig(meterId);
             if (parkingMeter != null) {
-                LOG.debug("/retrieve id=" + meterId + " found entity :" + parkingMeter);
+                LOG.debug("/retrieve id=" + meterId + " found meter :" + parkingMeter);
                 replyMessage.setMeterConfig(parkingMeter);
 
                 replyMessage.setCode(Response.Status.OK.getStatusCode());
                 return Response.status(Response.Status.OK).entity(replyMessage).build();
             } else {
-                LOG.debug("/retrieve id=" + meterId + " found no entity :");
-                replyMessage.setDebugMessage("/retrieve id=" + meterId + " found no entity");
+                LOG.debug("/retrieve id=" + meterId + " found no meter :");
+                replyMessage.setDebugMessage("/retrieve id=" + meterId + " found no meter");
                 replyMessage.setCode(Response.Status.OK.getStatusCode());
                 return Response.status(Response.Status.OK).entity(replyMessage).build();
             }

@@ -1,22 +1,18 @@
-<%-- 
-    Document   : AddOrModifyEntity
-    Created on : Nov 30, 2018, 11:17:38 PM
-    Author     : cgallen
---%>
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
 <%@page import="org.klea.test.project.web.WebObjectFactory"%>
 <%@page import="org.klea.test.project.model.ServiceFactory"%>
 <%@page import="org.klea.test.project.model.ServiceFacade"%>
-<%@page import="org.klea.test.project.model.Entity"%>
+<%@page import="org.klea.test.project.model.Meter"%>
 
 
 <%
 
     ServiceFacade serviceFacade = (ServiceFacade) session.getAttribute("serviceFacade");
 
-    // If the user session has no bankApi, create a new one
+    // If the user session has no Meter, create a new one
     if (serviceFacade == null) {
         ServiceFactory serviceFactory = WebObjectFactory.getServiceFactory();
         serviceFacade = serviceFactory.getServiceFacade();
@@ -25,28 +21,29 @@
 
     // get request values
     String action = (String) request.getParameter("action");
-    String entityIdReq = (String) request.getParameter("entityId");
-    String entityField_AReq = (String) request.getParameter("field_A");
-    String entityField_BReq = (String) request.getParameter("field_B");
-    String entityField_CReq = (String) request.getParameter("field_C");
-
+    String meterIdReq = (String) request.getParameter("meterId");
+    String locationReq = (String) request.getParameter("location");
+    String startTime = (String) request.getParameter("startTime");
+    double pricePerHalfHour;
+    String price = Double.toString(pricePerHalfHour);
+    String priceHour = (String) request.getParameter("pricePerHalfHour");
     String errorMessage = "";
 
-    Entity entity = null;
-    Integer entityId = null;
+    Meter meter = null;
+    Integer meterId = null;
 
     if ("modifyEntity".equals(action)) {
         try {
-            entityId = Integer.parseInt(entityIdReq);
-            entity = serviceFacade.retrieveEntity(entityId);
+            meterId = Integer.parseInt(meterIdReq);
+            meter = serviceFacade.retrieveMeterConfig(meterId);
         } catch (Exception e) {
-            errorMessage = "problem finding entity " + e.getMessage();
+            errorMessage = "problem finding meter " + e.getMessage();
         }
     } else if ("createEntity".equals(action)) {
         try {
-            entity = new Entity();
+            meter = new Meter();
         } catch (Exception e) {
-            errorMessage = "problem finding entity " + e.getMessage();
+            errorMessage = "problem finding meter " + e.getMessage();
         }
     } else {
         errorMessage = "cannot recognise action: " + action;
@@ -58,14 +55,14 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="css/style.css">
-        <title>Edit Entity</title>
+        <title>Edit Meter</title>
     </head>
     <body>
         <% if ("createEntity".equals(action)) {
         %>
-        <h1>Add New Entity</h1>
+        <h1>Add New Meter</h1>
         <% } else {%>
-        <h1>Modify Entity <%=entityId%></h1>
+        <h1>Modify Meter <%=meterId%></h1>
         <% }%>
         <form action="ListEntities.jsp">
             <table>
@@ -75,19 +72,19 @@
                     <th>New Value</th>
                 </tr>
                 <tr>
-                    <td>Entity Id</td>
-                    <td><%=entity.getId()%></td>
+                    <td>Meter Id</td>
+                    <td><%=meter.getMeterId()%></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>field_A</td>
-                    <td><%=entity.getField_A()%></td>
-                    <td><input type="text" name="field_A" value ="<%=entity.getField_A()%>"></td>
+                    <td>Location</td>
+                    <td><%=meter.getLocation()%></td>
+                    <td><input type="text" name="field_A" value ="<%=meter.getLocation()%>"></td>
                 </tr>
                 <tr>
-                    <td>field_B</td>
-                    <td><%=entity.getField_B()%></td>
-                    <td><input type="text" name="field_B" value ="<%=entity.getField_B()%>"></td>
+                    <td>Schedule</td>
+                    <td><%=meter.calculateCharge(startTime, pricePerHalfHour)%></td>
+                    <td><input type="text" name="field_B" value ="<%=meter.getField_B()%>"></td>
                 </tr>
                 <tr>
                     <td>field_C</td>
@@ -99,12 +96,12 @@
             <% if ("createEntity".equals(action)) {
             %>
             <input type="hidden" name="action" value="createEntity">
-            <input type="hidden" name="entityId" value="<%=entityId%>">
+            <input type="hidden" name="entityId" value="<%=meterId%>">
             <input type="submit" value="Create New Entity">
             <% } else if ("modifyEntity".equals(action)) {
             %>
             <input type="hidden" name="action" value="modifyEntity">
-            <input type="hidden" name="entityId" value="<%=entityId%>">
+            <input type="hidden" name="entityId" value="<%=meterId%>">
             <input type="submit" value="Modify Entity">
             <% }%>
         </form>

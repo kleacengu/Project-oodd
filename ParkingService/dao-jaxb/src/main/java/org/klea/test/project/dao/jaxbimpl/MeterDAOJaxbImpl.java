@@ -25,9 +25,9 @@ import org.klea.test.project.model.MeterDAO;
  *
  * @author cgallen
  */
-public class EntityDAOJaxbImpl implements MeterDAO {
+public class MeterDAOJaxbImpl implements MeterDAO {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EntityDAOJaxbImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MeterDAOJaxbImpl.class);
 
     // jaxb context needs jaxb.index jaxbFile to be in same classpath
     // this path contains a list of Jaxb annotated classes for the context to parse
@@ -44,7 +44,7 @@ public class EntityDAOJaxbImpl implements MeterDAO {
 
     private JAXBContext jaxbContext = null;
 
-    public EntityDAOJaxbImpl(String dataFileLocation) {
+    public MeterDAOJaxbImpl(String dataFileLocation) {
         super();
         if (dataFileLocation == null) {
             throw new IllegalArgumentException("dataFile cannot be null");
@@ -175,11 +175,11 @@ public class EntityDAOJaxbImpl implements MeterDAO {
                     boolean changedfield = false;
 
                     // update properties fields if only if entityTemplate field is set
-                    //if (meterId.getLocation() != null) {
-                    //    en.setLocation(meterId.getLocation());
-                    //    changedfield = true;
-                    //   
-                    //}
+                    if (meterId.getLocation() != null) {
+                        en.setLocation(meterId.getLocation());
+                        changedfield = true;
+                       
+                    }
                     //if (meterId.getDuration() != null) {
                     //    en.setDuration(meterId.getDuration());
                     //    changedfield = true;

@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.klea.test.project.dao.jaxbimpl.EntityDAOJaxbImpl;
+import org.klea.test.project.dao.jaxbimpl.MeterDAOJaxbImpl;
 import org.klea.test.project.model.Meter;
 import org.klea.test.project.model.MeterDAO;
 
@@ -21,9 +21,9 @@ import org.klea.test.project.model.MeterDAO;
  *
  * @author cgallen
  */
-public class EntityDAOJaxbImplTest {
+public class MeterDAOJaxbImplTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EntityDAOJaxbImplTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MeterDAOJaxbImplTest.class);
 
     public final String TEST_DATA_FILE_LOCATION = "target/testDaofile.xml";
 
@@ -36,7 +36,7 @@ public class EntityDAOJaxbImplTest {
         assertFalse(file.exists());
 
         // create dao
-        MeterDAO meterDao = new EntityDAOJaxbImpl(TEST_DATA_FILE_LOCATION);
+        MeterDAO meterDao = new MeterDAOJaxbImpl(TEST_DATA_FILE_LOCATION);
 
         // check that new file created
         assertTrue(file.exists());
@@ -44,13 +44,12 @@ public class EntityDAOJaxbImplTest {
         // check there are no entities
         assertTrue(meterDao.retreiveAllMeters().isEmpty());
 
-        // add 2 entities
+        // add 3 entities
         int ENTITY_NUMBER = 3;
         for (int intityId = 0; intityId < ENTITY_NUMBER; intityId++) {
             Meter meter = new Meter();
             meter.setMeterId(intityId);
             meter.setLocation("Location" + intityId);
-            //entity.setDuration("field_C_" + intityId);;
 
             LOG.debug("adding meter:" + meter);
             Meter e = meterDao.createParkingMeter(meter);
@@ -59,13 +58,15 @@ public class EntityDAOJaxbImplTest {
 
         // check 3 entities added
         assertTrue(ENTITY_NUMBER == meterDao.retreiveAllMeters().size());
+        
 
         // check return false for delete unknown entity
-        assertFalse(meterDao.deleteParkingMeter(ENTITY_NUMBER));
+           LOG.debug("deleting meter: " + (ENTITY_NUMBER));
+       assertTrue(meterDao.deleteParkingMeter(ENTITY_NUMBER));
 
         // find an entity to delete
         List<Meter> elist = meterDao.retreiveAllMeters();
-        Integer idToDelete = elist.get(1).getMeterId();
+        Integer idToDelete = elist.get(0).getMeterId();
         LOG.debug("deleting  entity:" + idToDelete);
 
         // check found and deleted
@@ -76,13 +77,14 @@ public class EntityDAOJaxbImplTest {
 
         // check entities size decremeted
         List<Meter> elist2 = meterDao.retreiveAllMeters();
-        assertTrue(ENTITY_NUMBER - 1 == elist2.size());
+        LOG.debug("elist2.size() "+elist2.size());
+        assertTrue(ENTITY_NUMBER - 2 == elist2.size());
 
         // update entity
-        Meter meterToUpdate = elist2.get(1);
-        LOG.debug("updating entity: " + meterToUpdate);
+        Meter meterToUpdate = elist2.get(0);
+        LOG.debug("updating meter: " + meterToUpdate);
 
-        // add 3 newProperties for entity
+        // add 1 newProperties for entity
         meterToUpdate.setLocation("Southampton - Portland Terrace");
         //meterToUpdate.setField_B("field_B_Update");
         //meterToUpdate.setField_C(null); // do not update field C

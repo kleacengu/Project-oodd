@@ -23,7 +23,12 @@ public class ServiceFacadeImpl implements ServiceFacade {
     }
     
     @Override
-    public Meter retrieveParkingMeter(Integer meterId){
+     public Meter createParkingMeter(Meter meterIn){
+         return meterDAO.createParkingMeter(meterIn);
+     }
+    
+    @Override
+    public Meter retreiveParkingMeter(Integer meterId){
       return meterDAO.retreiveParkingMeter(meterId);
     }
             
@@ -72,6 +77,17 @@ public class ServiceFacadeImpl implements ServiceFacade {
       String ticketString = ticketId + meterId + durationTime + startTime + endTime + dateOfIssue;
       return ticketString;
    }
+
+    @Override
+    public Meter retrieveMeterConfig(Integer meterId) {
+        
+        Meter meterConf = new Meter();
+        Integer id = meterConf.getMeterId();
+        meterConf.getLocation();
+        meterConf.getParkingBands();
+        
+        return meterConf;
+    }
        
 
     
