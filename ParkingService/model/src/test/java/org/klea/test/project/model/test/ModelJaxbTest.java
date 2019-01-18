@@ -26,6 +26,7 @@ import javax.xml.bind.Unmarshaller;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.klea.test.project.model.Meter;
+import org.klea.test.project.model.MeterList;
 import org.klea.test.project.model.ParkingBand;
 import org.klea.test.project.model.ReplyMessage;
 
@@ -91,5 +92,62 @@ public class ModelJaxbTest {
             throw new RuntimeException("problem testing jaxb marshalling", e);
         }
     }
+ @Test
+    public void testJaxb2() {
+
+        try {
+
+            // test file we will write and read. 
+            // Note in target so that will be delted on each run and will not be saved to git
+            File file = new File("target/testData2.xml");
+            System.out.println("writing test file to " + file.getAbsolutePath());
+
+            // jaxb context needs jaxb.index file to be in same classpath
+            // this contains a list of Jaxb annotated classes for the context to parse
+            JAXBContext jaxbContext = JAXBContext.newInstance("org.klea.test.project.model");
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            // output pretty printed
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            // create some mock objects to test marshalling and unmarshalling
+            MeterList meterList = new MeterList();
+            Meter meterConfig = new Meter();
+            meterConfig.setLocation("Southampton");
+            meterConfig.setMeterId(100);
+            ParkingBand parkingBand = new ParkingBand();
+            parkingBand.setStartTime("10:00");
+            parkingBand.setPricePerHalfHour(2.50);
+            meterConfig.getParkingBands().add(parkingBand);
+            
+            meterList.getMeters().add(meterConfig);
+
+
+            // marshal the object lists to system out, a file and a stringWriter
+            jaxbMarshaller.marshal(meterList, System.out);
+            jaxbMarshaller.marshal(meterList, file);
+
+            // string writer is used to compare received object
+            StringWriter sw1 = new StringWriter();
+            jaxbMarshaller.marshal(meterList, sw1);
+
+            // having written the file we now read in the file for test
+            Unmarshaller jaxbUnMarshaller = jaxbContext.createUnmarshaller();
+            MeterList receivedMessage = (MeterList) jaxbUnMarshaller.unmarshal(file);
+
+            StringWriter sw2 = new StringWriter();
+            jaxbMarshaller.marshal(receivedMessage, sw2);
+
+            // check transmitted and recieved message are the same
+            assertEquals(sw1.toString(), sw2.toString());
+
+        } catch (JAXBException e) {
+            throw new RuntimeException("problem testing jaxb marshalling", e);
+        }
+    }
 
 }
+
+
+

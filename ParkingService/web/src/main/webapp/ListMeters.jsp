@@ -1,4 +1,6 @@
 
+<%@page import="java.io.PrintWriter"%>
+<%@page import="java.io.StringWriter"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
 <%@page import="org.klea.test.project.web.WebObjectFactory"%>
@@ -25,23 +27,31 @@
     String errorMessage = "";
     if ("deleteParkingMeter".equals(action)) {
         try {
-            Integer MeterId = Integer.parseInt(meterId);
-            serviceFacade.deleteParkingMeter(MeterId);
+            Integer meterIdInt = Integer.parseInt(meterId);
+            serviceFacade.deleteParkingMeter(meterIdInt);
         } catch (Exception e) {
-            errorMessage = "problem deleting Meter " + e.getMessage();
+            errorMessage = "problem deleting Meter " + e.toString();
         }
     } else if ("updateParkingMeter".equals(action)) {
         try {
-            Integer MeterId = Integer.parseInt(meterId);
+            Integer meterIdInt=null;
+            try{
+             meterIdInt = Integer.parseInt(meterId);
+            } catch (Exception ex){
+                throw new RuntimeException("problem parsing meterId"+meterId, ex);
+            }
             Meter meter = new Meter();
             meter.setLocation(location);
+            meter.setMeterId(meterIdInt);
            
-            Meter meterUpdateService = serviceFacade.updateParkingMeter(meter);
-            if (MeterId == null) {
-                errorMessage = "problem modifying Meter. could not find meterId " + MeterId;
+            Meter updatedMeter = serviceFacade.updateParkingMeter(meter);
+            if (meterIdInt == null) {
+                errorMessage = "problem modifying Meter. could not find meterId " + meterIdInt;
             }
         } catch (Exception e) {
-            errorMessage = "problem modifying Meter " + e.getMessage();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            errorMessage = "problem modifying Meter " + errors.toString();
         }
     } else if ("createMeter".equals(action)) {
         try {
@@ -52,7 +62,7 @@
                 errorMessage = "problem creating Meter. Service returned null ";
             }
         } catch (Exception e) {
-            errorMessage = "problem creating  Meter " + e.getMessage();
+            errorMessage = "problem creating  Meter " + e.toString();
         }
     } 
 
@@ -84,14 +94,14 @@
                 <td><%=entity.getMeterId()%></td>
                 <td><%=entity.getLocation()%></td>
                 <td>
-                    <form action="AddOrModifyEntity.jsp">
+                    <form action="AddOrModifyMeters.jsp">
                         <input type="hidden" name="action" value="modifyMeter">
                         <input type="hidden" name="meterId" value="<%=entity.getMeterId()%>">
-                        <input type="submit" value="Modify EntityMeter">
+                        <input type="submit" value="Modify Meter">
                     </form>
-                    <form action="ListEntities.jsp">
-                        <input type="hidden" name="action" value="deleteEntity">
-                        <input type="hidden" name="entityId" value="<%=entity.getMeterId()%>">
+                    <form action="ListMeters.jsp">
+                        <input type="hidden" name="action" value="deleteParkingMeter">
+                        <input type="hidden" name="meterId" value="<%=entity.getMeterId()%>">
                         <input type="submit" value="Delete Entity">
                     </form>
                 </td>
@@ -100,9 +110,9 @@
 
         </table> 
         <BR>
-        <form action="AddOrModifyEntity.jsp">
-            <input type="hidden" name="action" value="createEntity">
-            <input type="submit" value="Create Entity">
+        <form action="AddOrModifyMeters.jsp">
+            <input type="hidden" name="action" value="createMeter">
+            <input type="submit" value="Create Meter">
         </form>
     </body>
 </html>

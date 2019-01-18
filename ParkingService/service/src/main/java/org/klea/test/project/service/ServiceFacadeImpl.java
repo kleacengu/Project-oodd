@@ -43,16 +43,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
         return meterDAO.retreiveAllMeters();
     }
         
-    
-     @Override
-    public boolean validateCard(String cardNumber, String lunnNumber) {
-        if (cardNumber.length() == 16)
-        {
-            if(lunnNumber.length() == 3)
-                return true;
-        }
-        return false;
-    }
+   
     
      AtomicInteger m_atomicIssueNumber = new AtomicInteger(0);
 

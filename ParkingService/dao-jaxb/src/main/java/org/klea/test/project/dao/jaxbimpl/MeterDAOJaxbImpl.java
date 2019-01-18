@@ -60,12 +60,12 @@ public class MeterDAOJaxbImpl implements MeterDAO {
         }
         synchronized (Lock) {
             // set initial id if not set or increment by 1
-            Integer id = (meterList.getLastEntityId()==null) ? 1 : meterList.getLastEntityId() + 1;
+            Integer id = (meterList.getLastMeterId()==null) ? 1 : meterList.getLastMeterId() + 1;
 
-            meterList.setLastEntityId(id);
+            meterList.setLastMeterId(id);
             Meter ecopy = copy(meterIn);
             ecopy.setMeterId(id);
-            meterList.getEntities().add(ecopy);
+            meterList.getMeters().add(ecopy);
             save();
             return ecopy;
         }
@@ -77,7 +77,7 @@ public class MeterDAOJaxbImpl implements MeterDAO {
             throw new IllegalArgumentException("id cannot be null");
         }
         synchronized (Lock) {
-            Iterator<Meter> it = meterList.getEntities().iterator();
+            Iterator<Meter> it = meterList.getMeters().iterator();
             while (it.hasNext()) {
                 Meter en = it.next();
                 if (meterId.equals(en.getMeterId())) {
@@ -93,7 +93,7 @@ public class MeterDAOJaxbImpl implements MeterDAO {
    // @Override
     //public void deleteAllEntities() {
     //    synchronized (Lock) {
-    //        meterList.getEntities().clear();
+    //        meterList.getMeters().clear();
      //   }
    // }
 
@@ -103,7 +103,7 @@ public class MeterDAOJaxbImpl implements MeterDAO {
             throw new IllegalArgumentException("id cannot be null");
         }
         synchronized (Lock) {
-            for (Meter en : meterList.getEntities()) {
+            for (Meter en : meterList.getMeters()) {
                 if (meterId.equals(en.getMeterId())) {
                     return copy(en);
                 }
@@ -116,7 +116,7 @@ public class MeterDAOJaxbImpl implements MeterDAO {
     public List<Meter> retreiveAllMeters() {
         synchronized (Lock) {
             List<Meter> returnList = new ArrayList<Meter>();
-            for (Meter entity : meterList.getEntities()) {
+            for (Meter entity : meterList.getMeters()) {
                 returnList.add(copy(entity));
             };
             return returnList;
@@ -135,7 +135,7 @@ public class MeterDAOJaxbImpl implements MeterDAO {
     //        throw new IllegalArgumentException("entityTemplate cannot be null");
     //   }
     //    List<Meter> returnList = new ArrayList<Meter>();
-    //    for (Meter entity : meterList.getEntities()) {
+    //    for (Meter entity : meterList.getMeters()) {
     //        boolean match = true;
     //        if (meterId.getMeterId()!= null) {
     //            if (!meterId.getMeterId().equals(entity.getMeterId())) {
@@ -170,7 +170,7 @@ public class MeterDAOJaxbImpl implements MeterDAO {
             throw new IllegalArgumentException("entity cannot be null");
         }
         synchronized (Lock) {
-            for (Meter en : meterList.getEntities()) {
+            for (Meter en : meterList.getMeters()) {
                 if (meterId.getMeterId().equals(en.getMeterId())) {
                     boolean changedfield = false;
 

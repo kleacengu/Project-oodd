@@ -45,15 +45,15 @@
       <Constructors/>
       <Methods/>
     </Class>
-    <Interface name="ServiceFacade" package="org.klea.test.project.model" visibility="public" xPosition="498.0" yPosition="460.0">
+    <Interface name="ServiceFacade" package="org.klea.test.project.model" visibility="public" xPosition="495.0" yPosition="461.0">
       <Methods>
         <Method name="createTicket" returnType="String" visibility="public">
           <Argument type="Integer" name="meterId"/>
           <Argument type="double" name="durationTime"/>
           <Argument type="String" name="startTime"/>
         </Method>
-        <Method name="validateCard" returnType="String" visibility="public">
-          <Argument type="String" name="cardNumber"/>
+        <Method name="retreiveMeterConfig" returnType="Integer" visibility="public">
+          <Argument type="Integer" name="meterId"/>
         </Method>
       </Methods>
     </Interface>
@@ -89,18 +89,27 @@
     <Interface name="WebUiJsp_do_not_generate" package="org.klea.test.project.model" visibility="public" xPosition="881.0" yPosition="19.0">
       <Methods/>
     </Interface>
+    <Class name="Validator" package="" visibility="public" xPosition="1026.0" yPosition="461.0">
+      <Fields>
+        <Field name="cardNumber" type="String" visibility="private"/>
+        <Field name="lunnNumber" type="String" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
   </ClassDiagramComponents>
   <ClassDiagramRelations>
-    <UseRelation name="usesParkingBand" source="org.klea.test.project.model.Meter" target="org.klea.test.project.model.ParkingBand" sourceCardinality="1..1" targetCardinality="1..*"/>
-    <UseRelation name="usesServiceFacade" source="org.klea.test.project.model.RestInterface" target="org.klea.test.project.model.ServiceFacade" sourceCardinality="1..1" targetCardinality="1..1"/>
-    <UseRelation name="usesObjectFactoryToGetService" source="org.klea.test.project.model.WebUiJsp_do_not_generate" target="org.klea.test.project.model.ServiceFactory" sourceCardinality="1..1" targetCardinality="1..1"/>
-    <UseRelation name="usesEntityDao" source="org.klea.test.project.model.ServiceFacade" target="org.klea.test.project.model.MeterDAO" sourceCardinality="1..1" targetCardinality="1..1"/>
     <UseRelation name="usesServiceFacade" source="org.klea.test.project.model.WebUiJsp_do_not_generate" target="org.klea.test.project.model.ServiceFacade" sourceCardinality="1..1" targetCardinality="1..1"/>
-    <UseRelation name="createsAndAccesses" source="org.klea.test.project.model.ServiceFactory" target="org.klea.test.project.model.ServiceFacade" sourceCardinality="1..1" targetCardinality="1..1"/>
     <IsRelation name="is" source="org.klea.test.project.model.ServiceFacade" target="org.klea.test.project.model.MeterDAO"/>
+    <UseRelation name="usesEntityDao" source="org.klea.test.project.model.ServiceFacade" target="org.klea.test.project.model.MeterDAO" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation name="usesServiceFacade" source="org.klea.test.project.model.RestInterface" target="org.klea.test.project.model.ServiceFacade" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation name="" source="Validator" target="org.klea.test.project.model.ServiceFacade" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation name="usesParkingBand" source="org.klea.test.project.model.Meter" target="org.klea.test.project.model.ParkingBand" sourceCardinality="1..1" targetCardinality="1..*"/>
     <UseRelation name="usesMetetFactoryToGetService" source="org.klea.test.project.model.RestInterface" target="org.klea.test.project.model.ServiceFactory" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation name="usesMeter" source="org.klea.test.project.model.MeterDAO" target="org.klea.test.project.model.Meter" sourceCardinality="1..1" targetCardinality="1..*"/>
+    <UseRelation name="createsAndAccesses" source="org.klea.test.project.model.ServiceFactory" target="org.klea.test.project.model.ServiceFacade" sourceCardinality="1..1" targetCardinality="1..1"/>
     <UseRelation name="useReplyMessage" source="org.klea.test.project.model.RestInterface" target="org.klea.test.project.model.ReplyMessage" sourceCardinality="1..1" targetCardinality="0..*"/>
     <UseRelation name="meterCreatesTicket" source="org.klea.test.project.model.Meter" target="org.klea.test.project.model.Ticket" sourceCardinality="1..1" targetCardinality="0..*"/>
-    <UseRelation name="usesMeter" source="org.klea.test.project.model.MeterDAO" target="org.klea.test.project.model.Meter" sourceCardinality="1..1" targetCardinality="1..*"/>
+    <UseRelation name="usesObjectFactoryToGetService" source="org.klea.test.project.model.WebUiJsp_do_not_generate" target="org.klea.test.project.model.ServiceFactory" sourceCardinality="1..1" targetCardinality="1..1"/>
   </ClassDiagramRelations>
 </ClassDiagram>

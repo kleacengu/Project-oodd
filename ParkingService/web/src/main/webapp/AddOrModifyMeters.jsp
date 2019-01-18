@@ -24,22 +24,22 @@
     String meterIdReq = (String) request.getParameter("meterId");
     String locationReq = (String) request.getParameter("location");
     String startTime = (String) request.getParameter("startTime");
-    double pricePerHalfHour;
-    String price = Double.toString(pricePerHalfHour);
+ //   double pricePerHalfHour;
+ //   String price = Double.toString(pricePerHalfHour);
     String priceHour = (String) request.getParameter("pricePerHalfHour");
     String errorMessage = "";
 
     Meter meter = null;
     Integer meterId = null;
 
-    if ("modifyEntity".equals(action)) {
+    if ("modifyMeter".equals(action)) {
         try {
             meterId = Integer.parseInt(meterIdReq);
             meter = serviceFacade.retrieveMeterConfig(meterId);
         } catch (Exception e) {
             errorMessage = "problem finding meter " + e.getMessage();
         }
-    } else if ("createEntity".equals(action)) {
+    } else if ("createMeter".equals(action)) {
         try {
             meter = new Meter();
         } catch (Exception e) {
@@ -58,13 +58,14 @@
         <title>Edit Meter</title>
     </head>
     <body>
-        <% if ("createEntity".equals(action)) {
+        <%=errorMessage%>
+        <% if ("createMeter".equals(action)) {
         %>
         <h1>Add New Meter</h1>
         <% } else {%>
         <h1>Modify Meter <%=meterId%></h1>
         <% }%>
-        <form action="ListEntities.jsp">
+        <form action="ListMeters.jsp">
             <table>
                 <tr>
                     <th>Field</th>
@@ -79,33 +80,23 @@
                 <tr>
                     <td>Location</td>
                     <td><%=meter.getLocation()%></td>
-                    <td><input type="text" name="field_A" value ="<%=meter.getLocation()%>"></td>
+                    <td><input type="text" name="location" value ="<%=meter.getLocation()%>"></td>
                 </tr>
-                <tr>
-                    <td>Schedule</td>
-                    <td><%=meter.calculateCharge(startTime, pricePerHalfHour)%></td>
-                    <td><input type="text" name="field_B" value ="<%=meter.getField_B()%>"></td>
-                </tr>
-                <tr>
-                    <td>field_C</td>
-                    <td><%=entity.getField_C()%></td>
-                    <td><input type="text" name="field_C" value ="<%=entity.getField_C()%>"></td>
-                </tr>
-            </table> 
+             </table> 
             <BR>
-            <% if ("createEntity".equals(action)) {
+            <% if ("createMeter".equals(action)) {
             %>
-            <input type="hidden" name="action" value="createEntity">
-            <input type="hidden" name="entityId" value="<%=meterId%>">
-            <input type="submit" value="Create New Entity">
-            <% } else if ("modifyEntity".equals(action)) {
+            <input type="hidden" name="action" value="createMeter">
+            <input type="hidden" name="meterId" value="">
+            <input type="submit" value="Create New Meter">
+            <% } else if ("modifyMeter".equals(action)) {
             %>
-            <input type="hidden" name="action" value="modifyEntity">
-            <input type="hidden" name="entityId" value="<%=meterId%>">
-            <input type="submit" value="Modify Entity">
+            <input type="hidden" name="action" value="updateParkingMeter">
+            <input type="hidden" name="meterId" value="<%=meterId%>">
+            <input type="submit" value="Modify ">
             <% }%>
         </form>
-        <form action="ListEntities.jsp">
+        <form action="ListMeters.jsp">
             <input type="submit" value="Cancel and Return">
         </form>
     </body>

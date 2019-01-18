@@ -7,7 +7,7 @@ public interface ServiceFacade extends MeterDAO {
 
     public String createTicket(Integer meterId, double durationTime, String startTime, String endTime, Date dateOfIssue);
 
-   public boolean validateCard(String cardNumber, String lunnNumber);
+   //public boolean validateCard(String cardNumber, String lunnNumber);
     //do it in ticket maachine
     public Meter retrieveMeterConfig(Integer meterId);
     

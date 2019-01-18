@@ -22,33 +22,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class MeterList {
 
     // only used by persistance layer
-    private Integer lastEntityId = null;
+    private Integer lastMeterId = null;
 
     @XmlElementWrapper(name = "meters")
     @XmlElement(name = "meter")
-    private List<Meter> entities = new ArrayList<Meter>();
+    private List<Meter> meters = new ArrayList<Meter>();
 
-    public List<Meter> getEntities() {
-        return entities;
+    public List<Meter> getMeters() {
+        return meters;
     }
 
-    public void setEntities(List<Meter> entities) {
-        this.entities = entities;
+    public void setMeters(List<Meter> entities) {
+        this.meters = entities;
     }
     
     
-    public Integer getLastEntityId() {
-        return lastEntityId;
+    public Integer getLastMeterId() {
+        return lastMeterId;
     }
 
-    public void setLastEntityId(Integer lastEntityId) {
-        this.lastEntityId = lastEntityId;
+    public void setLastMeterId(Integer lastEntityId) {
+        this.lastMeterId = lastEntityId;
     }
 
     @Override
     public String toString() {
-        return "EntityList{" + "lastEntityId=" + lastEntityId + ", entities=" + entities + '}';
+        return "MeterList{" + "lastMeterId=" + lastMeterId + ", meters=" + meters + '}';
     }
+
 
 
 
